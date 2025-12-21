@@ -1,68 +1,57 @@
 @echo off
 chcp 65001 > nul
 cd /d "%~dp0"
-title Penguin Magic
+title 企鹅艾洛魔法世界
 color 0B
 
 echo.
 echo  ============================================
-echo       Penguin Magic - Starting...
+echo       企鹅艾洛魔法世界 - 启动中...
 echo  ============================================
 echo.
 
 :: Check Environment
-echo  [CHECK] Verifying environment...
-
-where python >nul 2>&1
-if %errorlevel% neq 0 (
-    color 0C
-    echo.
-    echo  [ERROR] Python not found!
-    echo          Please run "First Install.bat" or install Python
-    echo.
-    pause
-    exit /b 1
-)
-echo  [OK] Python ready
+echo  [CHECK] 检查环境...
 
 where node >nul 2>&1
 if %errorlevel% neq 0 (
     color 0C
     echo.
-    echo  [ERROR] Node.js not found!
-    echo          Please run "First Install.bat" or install Node.js
+    echo  [ERROR] 未找到 Node.js！
+    echo          请运行 "首次安装.bat" 或安装 Node.js
     echo.
     pause
     exit /b 1
 )
-echo  [OK] Node.js ready
+echo  [OK] Node.js 就绪
 
 :: Check node_modules
-if not exist "node_modules" (
+if not exist "backend-nodejs\node_modules" (
     color 0E
     echo.
-    echo  [WARN] Dependencies not installed, running npm install...
+    echo  [WARN] 后端依赖未安装，请先运行 "首次安装.bat"
     echo.
-    call npm install
-    if %errorlevel% neq 0 (
-        color 0C
-        echo  [ERROR] npm install failed!
-        pause
-        exit /b 1
-    )
+    pause
+    exit /b 1
 )
-echo  [OK] Dependencies ready
+
+if not exist "dist" (
+    color 0E
+    echo.
+    echo  [WARN] 前端未构建，请先运行 "首次安装.bat"
+    echo.
+    pause
+    exit /b 1
+)
+echo  [OK] 依赖就绪
 echo.
 
 :: Kill existing services
-echo  [CLEAN] Stopping old services...
+echo  [CLEAN] 清理旧服务...
 for /f "tokens=5" %%a in ('netstat -ano 2^>nul ^| findstr ":8765 " ^| findstr "LISTENING"') do (
     taskkill /f /pid %%a >nul 2>&1
 )
-for /f "tokens=5" %%a in ('netstat -ano 2^>nul ^| findstr ":5176 " ^| findstr "LISTENING"') do (
-    taskkill /f /pid %%a >nul 2>&1
-)
-echo  [OK] Ports cleared
+echo  [OK] 端口已清理
 echo.
 
 :: Create directories
@@ -72,11 +61,11 @@ if not exist "output" mkdir "output"
 if not exist "creative_images" mkdir "creative_images"
 
 :: Start backend
-echo  [1/2] Starting backend (Python)...
-start "PenguinMagic-Backend" cmd /c "cd /d "%~dp0backend" && python server.py || (echo Backend failed && pause)"
+echo  [START] 启动 Node.js 后端服务...
+start "企鹅魔法-后端" cmd /c "cd /d "%~dp0backend-nodejs" && node src/server.js || (echo 后端启动失败 && pause)"
 
 :: Wait for backend
-echo        Waiting for backend...
+echo        等待后端启动...
 ping 127.0.0.1 -n 4 > nul
 
 :: Check backend
@@ -84,49 +73,29 @@ netstat -ano | findstr ":8765" | findstr "LISTENING" >nul 2>&1
 if %errorlevel% neq 0 (
     color 0C
     echo.
-    echo  [ERROR] Backend failed to start!
-    echo          Check Python installation
-    echo          Or check backend window for errors
+    echo  [ERROR] 后端启动失败！
+    echo          请检查后端窗口的错误信息
     echo.
     pause
     exit /b 1
 )
-echo  [OK] Backend running (8765)
+echo  [OK] 后端运行中 (8765)
 echo.
-
-:: Start frontend
-echo  [2/2] Starting frontend (Vite)...
-start "PenguinMagic-Frontend" /min cmd /c "cd /d "%~dp0" && npm run dev"
-
-:: Wait for frontend
-echo        Waiting for frontend...
-ping 127.0.0.1 -n 8 > nul
-
-:: Check frontend
-netstat -ano | findstr ":5176" | findstr "LISTENING" >nul 2>&1
-if %errorlevel% neq 0 (
-    color 0E
-    echo  [WARN] Frontend may still be starting...
-) else (
-    echo  [OK] Frontend running (5176)
-)
 
 :: Open browser
-echo.
 color 0A
-echo  [SUCCESS] Opening browser...
-start http://localhost:5176
+echo  [SUCCESS] 打开浏览器...
+start http://127.0.0.1:8765
 
 echo.
 echo  ============================================
 echo.
-echo   Services running in background.
-echo   You can close this window.
+echo   服务正在后台运行
+echo   可以关闭此窗口
+ echo.
+echo   访问地址: http://127.0.0.1:8765
 echo.
-echo   Frontend: http://localhost:5176
-echo   Backend:  http://localhost:8765
-echo.
-echo   To stop: run "stop-services.bat"
+echo   要停止服务: 运行 "停止服务.bat"
 echo.
 echo  ============================================
 echo.
