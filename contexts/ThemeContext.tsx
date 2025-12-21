@@ -322,13 +322,9 @@ interface ThemeProviderProps {
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [themeName, setThemeName] = useState<ThemeName>(() => {
     const saved = localStorage.getItem('app_theme');
-    // 检查是否是12月，如果是默认使用圣诞主题
-    const now = new Date();
-    if (!saved && now.getMonth() === 11) { // 11 = December
-      return 'christmas';
-    }
     // 处理旧版本的 'default' 主题名
     if (saved === 'default') return 'dark';
+    // 默认使用深色主题
     return (saved as ThemeName) || 'dark';
   });
 

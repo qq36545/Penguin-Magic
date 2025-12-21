@@ -225,24 +225,39 @@ export const GeneratedImageDisplay: React.FC<GeneratedImageDisplayProps> = ({
                     </div>
                 </div>
                 
-                {/* 操作按钮 */}
+                {/* 操作按钮 - 配色：浓琉璃#004097、玄青#3b3c50、荔枝白#feffef */}
                 <div className="flex items-center gap-2 flex-wrap justify-center">
                     <button onClick={() => onPreviewClick(content.imageUrl!)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-gray-700/80 rounded-lg hover:bg-gray-600 transition-colors" aria-label="预览">
                         <ZoomInIcon className="w-3.5 h-3.5"/>
                         <span>预览</span>
                     </button>
-                    <button onClick={handleDownload} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white font-medium rounded-lg text-xs hover:bg-blue-500 transition-colors" aria-label="下载">
+                    <button 
+                      onClick={handleDownload} 
+                      className="flex items-center gap-1.5 px-3 py-1.5 font-medium rounded-lg text-xs transition-colors hover:opacity-90" 
+                      style={{ backgroundColor: '#004097', color: '#feffef' }}
+                      aria-label="下载"
+                    >
                         <DownloadIcon className="w-3.5 h-3.5"/>
                         <span>下载</span>
                     </button>
                     {onEditAgain && (
-                      <button onClick={onEditAgain} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white font-medium rounded-lg text-xs hover:bg-blue-500 transition-colors" aria-label="再次编辑">
+                      <button 
+                        onClick={onEditAgain} 
+                        className="flex items-center gap-1.5 px-3 py-1.5 font-medium rounded-lg text-xs transition-colors hover:opacity-90" 
+                        style={{ backgroundColor: '#3b3c50', color: '#feffef' }}
+                        aria-label="再次编辑"
+                      >
                           <EditIcon className="w-3.5 h-3.5"/>
                           <span>再编辑</span>
                       </button>
                     )}
                     {onRegenerate && (
-                      <button onClick={onRegenerate} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white font-medium rounded-lg text-xs hover:bg-blue-500 transition-colors" aria-label="重新生成">
+                      <button 
+                        onClick={onRegenerate} 
+                        className="flex items-center gap-1.5 px-3 py-1.5 font-medium rounded-lg text-xs transition-colors hover:opacity-90" 
+                        style={{ backgroundColor: '#3b3c50', color: '#feffef' }}
+                        aria-label="重新生成"
+                      >
                           <RefreshIcon className="w-3.5 h-3.5"/>
                           <span>重生成</span>
                       </button>

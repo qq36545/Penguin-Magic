@@ -1274,7 +1274,7 @@ export const Desktop: React.FC<DesktopProps> = ({
         <span>·</span>
         <span>微信：Lovexy_0222</span>
         <span>·</span>
-        <span className="text-blue-400/60">特别鸣谢 T8</span>
+        <span className="text-blue-400/60">特别鸣谢 T8、无我、大熊</span>
       </div>
       {/* 搜索框 + 自动叠放 + 隐藏文件名按钮 - 右上角，留出中间标签空间 */}
       <div className="absolute top-14 right-6 z-20 flex items-center gap-2">
@@ -1615,31 +1615,34 @@ export const Desktop: React.FC<DesktopProps> = ({
               
               {/* 底部操作按钮 */}
               <div className="px-4 pb-4 flex items-center justify-center gap-2 flex-wrap">
-                {/* 下载 */}
+                {/* 下载 - 浓琉璃#004097 */}
                 <button
                   onClick={() => handleDownloadImage(selectedImageItem)}
-                  className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white font-medium rounded-lg text-xs hover:bg-blue-500 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-2 font-medium rounded-lg text-xs transition-colors hover:opacity-90"
+                  style={{ backgroundColor: '#004097', color: '#feffef' }}
                   title="下载图片"
                 >
                   <DownloadIcon className="w-4 h-4" />
                   <span>下载</span>
                 </button>
-                {/* 再编辑 */}
+                {/* 再编辑 - 玄青#3b3c50 */}
                 {onImageEditAgain && (
                   <button
                     onClick={() => onImageEditAgain(selectedImageItem)}
-                    className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white font-medium rounded-lg text-xs hover:bg-blue-500 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-2 font-medium rounded-lg text-xs transition-colors hover:opacity-90"
+                    style={{ backgroundColor: '#3b3c50', color: '#feffef' }}
                     title="再次编辑"
                   >
                     <EditIcon className="w-4 h-4" />
                     <span>编辑</span>
                   </button>
                 )}
-                {/* 重新生成 */}
+                {/* 重新生成 - 玄青#3b3c50 */}
                 {onImageRegenerate && (
                   <button
                     onClick={() => onImageRegenerate(selectedImageItem)}
-                    className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white font-medium rounded-lg text-xs hover:bg-blue-500 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-2 font-medium rounded-lg text-xs transition-colors hover:opacity-90"
+                    style={{ backgroundColor: '#3b3c50', color: '#feffef' }}
                     title="重新生成"
                   >
                     <RefreshIcon className="w-4 h-4" />

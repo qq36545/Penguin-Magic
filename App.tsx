@@ -171,6 +171,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   const [isPromptExpanded, setIsPromptExpanded] = useState(false);
   const expandedPromptRef = useRef<HTMLTextAreaElement>(null);
   
+  // 参数配置折叠状态
+  const [isParamsExpanded, setIsParamsExpanded] = useState(true);
+  
+  // 帮助文档弹窗状态
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  
   // 处理ESC关闭弹窗
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -275,6 +281,16 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               </svg>
             )}
           </button>
+          {/* 帮助按钮 */}
+          <button
+            onClick={() => setIsHelpOpen(true)}
+            className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 hover:bg-white/10 text-neutral-400 hover:text-white"
+            title="帮助"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
           {/* 设置按钮 */}
           <button
             onClick={onSettingsClick}
@@ -354,22 +370,39 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           />
         </div>
         
-        {/* 模型参数卡片 */}
+        {/* 模型参数卡片 - 可折叠 */}
         <div 
-          className="flex-shrink-0 p-4 rounded-2xl mb-4 transition-colors duration-300"
+          className="flex-shrink-0 rounded-2xl mb-4 transition-colors duration-300 overflow-hidden"
           style={{
             background: theme.colors.bgSecondary,
             border: `1px solid ${theme.colors.border}`,
           }}
         >
-           <div className="flex items-center gap-2 mb-3">
+           {/* 可点击的标题栏 */}
+           <button
+             onClick={() => setIsParamsExpanded(!isParamsExpanded)}
+             className="w-full flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
+           >
+             <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-lg bg-blue-500/20 flex items-center justify-center ring-1 ring-blue-500/20">
-                <ImageIcon className="w-3 h-3 text-blue-400"/>
-              </div>
-              <h3 className="text-[11px] font-semibold" style={{ color: theme.colors.textPrimary }}>参数配置</h3>
-           </div>
+                  <ImageIcon className="w-3 h-3 text-blue-400"/>
+                </div>
+                <h3 className="text-[11px] font-semibold" style={{ color: theme.colors.textPrimary }}>参数配置</h3>
+             </div>
+             <svg 
+               className={`w-4 h-4 transition-transform duration-200 ${isParamsExpanded ? 'rotate-180' : ''}`}
+               style={{ color: theme.colors.textMuted }}
+               fill="none" 
+               stroke="currentColor" 
+               viewBox="0 0 24 24"
+             >
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+             </svg>
+           </button>
            
-           <div className="space-y-3">
+           {/* 可折叠内容 */}
+           <div className={`transition-all duration-300 ${isParamsExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+             <div className="px-4 pb-4 space-y-3">
               {/* 画面比例 */}
               <div>
                   <div className="flex justify-between mb-2">
@@ -431,6 +464,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   </div>
               </div>
            </div>
+           </div>
         </div>
         
         {/* 提示词区域 - 自动扩展到底部 */}
@@ -440,13 +474,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                <h2 className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: isDark ? '#6b7280' : '#9ca3af' }}>
                   {hasActiveTemplate ? '关键词' : '提示词'}
                </h2>
-               {/* 放大按钮 */}
-               {canViewPrompt && canEditPrompt && !activeBPTemplate && (
+               {/* 放大按钮 - BP模式也支持放大查看 */}
+               {canViewPrompt && (
                  <button
                    onClick={() => setIsPromptExpanded(true)}
                    className="w-5 h-5 rounded-md flex items-center justify-center transition-all hover:scale-110 hover:bg-white/10"
                    style={{ color: isDark ? '#6b7280' : '#9ca3af' }}
-                   title="放大编辑 (Esc关闭)"
+                   title="放大查看 (Esc关闭)"
                  >
                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
@@ -669,6 +703,140 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           </div>
         </div>
       )}
+      
+      {/* 帮助文档弹窗 */}
+      {isHelpOpen && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsHelpOpen(false);
+          }}
+        >
+          {/* 背景遮罩 */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          
+          {/* 弹窗内容 */}
+          <div 
+            className="relative w-[520px] max-w-[90vw] max-h-[80vh] overflow-y-auto p-5 rounded-2xl shadow-2xl"
+            style={{
+              background: isDark 
+                ? 'linear-gradient(135deg, rgba(20,20,28,0.98) 0%, rgba(15,15,20,0.99) 100%)'
+                : 'linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.99) 100%)',
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 标题栏 */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-blue-500/20 flex items-center justify-center ring-1 ring-blue-500/20">
+                  <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-base font-bold" style={{ color: isDark ? '#fff' : '#0f172a' }}>
+                  使用帮助
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsHelpOpen(false)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-105 hover:bg-gray-500/20"
+                style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* 帮助内容 */}
+            <div className="space-y-4">
+              {/* 桌面使用技巧 */}
+              <div 
+                className="p-4 rounded-xl"
+                style={{ background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' }}
+              >
+                <h4 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: isDark ? '#fff' : '#0f172a' }}>
+                  <span>🖥️</span> 桌面使用技巧
+                </h4>
+                <ul className="space-y-2 text-[11px]" style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 font-mono bg-blue-500/10 px-1.5 py-0.5 rounded">空格</span>
+                    <span>选中图片后按空格键快速预览大图</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 font-mono bg-blue-500/10 px-1.5 py-0.5 rounded">Ctrl+A</span>
+                    <span>全选桌面上的所有图片</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 font-mono bg-blue-500/10 px-1.5 py-0.5 rounded">Delete</span>
+                    <span>删除选中的图片</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 font-mono bg-blue-500/10 px-1.5 py-0.5 rounded">拖拽</span>
+                    <span>拖拽图片可以移动位置，拖到其他图片上可创建叠放</span>
+                  </li>
+                </ul>
+              </div>
+              
+              {/* 叠放功能 */}
+              <div 
+                className="p-4 rounded-xl"
+                style={{ background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' }}
+              >
+                <h4 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: isDark ? '#fff' : '#0f172a' }}>
+                  <span>📏</span> 叠放功能
+                </h4>
+                <ul className="space-y-2 text-[11px]" style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
+                  <li>• 将一张图片拖到另一张上方自动创建叠放</li>
+                  <li>• 点击叠放可以展开查看所有图片</li>
+                  <li>• 可以将图片从叠放中拖出来</li>
+                  <li>• 点击“自动叠放”按钮可将同名前缀的图片自动分组</li>
+                </ul>
+              </div>
+              
+              {/* 文件夹功能 */}
+              <div 
+                className="p-4 rounded-xl"
+                style={{ background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' }}
+              >
+                <h4 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: isDark ? '#fff' : '#0f172a' }}>
+                  <span>📁</span> 文件夹功能
+                </h4>
+                <ul className="space-y-2 text-[11px]" style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
+                  <li>• 双击文件夹可以打开查看内容</li>
+                  <li>• 可以将图片拖入文件夹</li>
+                  <li>• 右键文件夹可重命名或删除</li>
+                  <li>• 支持直接将系统文件夹拖入桌面导入</li>
+                </ul>
+              </div>
+              
+              {/* 快捷操作 */}
+              <div 
+                className="p-4 rounded-xl"
+                style={{ background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' }}
+              >
+                <h4 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: isDark ? '#fff' : '#0f172a' }}>
+                  <span>⚡</span> 快捷操作
+                </h4>
+                <ul className="space-y-2 text-[11px]" style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
+                  <li>• 双击图片可编辑标题</li>
+                  <li>• 按住 Shift 点击可多选图片</li>
+                  <li>• 框选可以批量选择图片</li>
+                  <li>• 鼠标滚轮可缩放桌面</li>
+                </ul>
+              </div>
+            </div>
+            
+            {/* 底部 */}
+            <div className="mt-4 pt-3 border-t" style={{ borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' }}>
+              <p className="text-[10px] text-center" style={{ color: isDark ? '#4b5563' : '#9ca3af' }}>
+                按 Esc 或点击外部关闭
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
   </aside>
   );
 };
@@ -783,15 +951,15 @@ const BPModePanel: React.FC<{
           className="p-3 mb-3 rounded-xl"
           style={{
             background: isDark 
-              ? 'linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(59,130,246,0.04) 100%)'
-              : 'rgba(59,130,246,0.06)',
-            border: `1px solid ${isDark ? 'rgba(59,130,246,0.15)' : 'rgba(59,130,246,0.1)'}`,
+              ? 'linear-gradient(135deg, rgba(238,209,109,0.12) 0%, rgba(238,209,109,0.06) 100%)'
+              : 'rgba(238,209,109,0.1)',
+            border: `1px solid ${isDark ? 'rgba(238,209,109,0.2)' : 'rgba(238,209,109,0.15)'}`,
           }}
         >
              <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-lg bg-amber-500/20 flex items-center justify-center">
-                    <BoltIcon className="w-3 h-3 text-amber-400"/>
+                  <div className="w-5 h-5 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(238,209,109,0.25)' }}>
+                    <BoltIcon className="w-3 h-3" style={{ color: '#eed16d' }}/>
                   </div>
                   <h3 className="text-xs font-semibold" style={{ color: isDark ? '#fff' : '#0f172a' }}>BP 模式</h3>
                 </div>
@@ -799,8 +967,8 @@ const BPModePanel: React.FC<{
                   <span 
                     className="px-1.5 py-0.5 rounded text-[9px] font-medium flex items-center gap-1"
                     style={{
-                      background: 'rgba(59,130,246,0.15)',
-                      color: '#a5b4fc',
+                      background: 'rgba(238,209,109,0.2)',
+                      color: '#eed16d',
                     }}
                   >
                     <LightbulbIcon className="w-2.5 h-2.5"/> {agentFields.length}
@@ -825,7 +993,7 @@ const BPModePanel: React.FC<{
                         className="w-full text-xs p-2.5 rounded-lg transition-all"
                         style={{
                           background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-                          border: `1px solid ${isDark ? 'rgba(59,130,246,0.2)' : 'rgba(59,130,246,0.15)'}`,
+                          border: `1px solid ${isDark ? 'rgba(238,209,109,0.25)' : 'rgba(238,209,109,0.2)'}`,
                           color: isDark ? '#fff' : '#0f172a',
                         }}
                         placeholder={`输入 ${v.label}...`}
@@ -880,9 +1048,12 @@ const RightPanel: React.FC<RightPanelProps> = ({
           <span className="text-[11px] font-medium truncate" style={{ color: theme.colors.textPrimary }}>
             {idea.title}
           </span>
-          {/* BP标签 */}
+          {/* BP标签 - #eed16d */}
           {idea.isBP && (
-            <span className="px-1 py-0.5 bg-amber-500/20 text-amber-400 text-[8px] font-bold rounded flex-shrink-0">
+            <span 
+              className="px-1 py-0.5 text-[8px] font-bold rounded flex-shrink-0"
+              style={{ backgroundColor: 'rgba(238,209,109,0.25)', color: '#eed16d' }}
+            >
               BP
             </span>
           )}

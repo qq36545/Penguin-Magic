@@ -259,7 +259,10 @@ export const CreativeLibrary: React.FC<CreativeLibraryProps> = ({ ideas, onBack,
                    <div className="absolute top-1.5 left-1.5 flex flex-col gap-0.5">
                       <div className="flex gap-0.5">
                         {idea.isBP && (
-                            <div className="px-1.5 py-0.5 bg-amber-500/90 text-white text-[9px] font-bold rounded-full backdrop-blur-sm pointer-events-none shadow-lg shadow-amber-500/20">
+                            <div 
+                              className="px-1.5 py-0.5 text-[9px] font-bold rounded-full backdrop-blur-sm pointer-events-none shadow-lg"
+                              style={{ backgroundColor: '#eed16d', color: '#1a1a2e', boxShadow: '0 4px 6px -1px rgba(238,209,109,0.3)' }}
+                            >
                                 BP
                             </div>
                         )}
