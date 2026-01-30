@@ -1,7 +1,3 @@
-<img width="915" height="915" alt="image" src="https://github.com/user-attachments/assets/4195dd2a-a70b-49b9-bd47-7fa503822cb3" />
-
-
-# 🐧 企鹅工坊 Penguin Magic
 
 ### 全球首款 AI 图像桌面管理工具
 
@@ -19,10 +15,6 @@ V0.2.4 增加导入创意库：https://opennana.com/awesome-prompt-gallery/   �
 增加红房子黄房子来判断后端服务是否正常运行
 最近遇到几次后端服务挂掉的情况，希望大家反馈，至今未排查出原因！
 V0.2.3 最新分支支持多并发
-
-
-
-
 
 ## 🌟 为什么选择企鹅工坊？
 
@@ -128,25 +120,7 @@ http://127.0.0.1:8765
 
 ---
 
-## 📞 联系我们
-
-- **Q群** — 854266067
-- **微信** — Lovexy_0222
-- **技术支持** — 企鹅 · 无我
-
----
-
-## 🙏 特别鸣谢
-
-**T8** — 感谢提供视频宣传支持
-**大熊** — 感谢提供视频宣传支持
-
----
-
 <div align="center">
-
-**企鹅工坊** — 让 AI 创作不再凌乱
-
 Made with ❤️ by Penguin Team
 
 </div>
