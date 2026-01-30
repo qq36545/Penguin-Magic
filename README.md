@@ -104,8 +104,8 @@ http://127.0.0.1:8765
 ### 环境要求
 
 - Node.js 18 或更高版本
-- Windows 10/11（其他系统需手动启动）
-
+- Windows 10/11
+- Mac / Linux （手动安装运行上面安装指令）
 ---
 
 ## 🛠️ 技术栈
@@ -116,7 +116,7 @@ http://127.0.0.1:8765
 | 样式方案 | Tailwind CSS |
 | 构建工具 | Vite |
 | 后端服务 | Node.js + Express |
-| AI 能力 | Gemini API / 贞贞 API |
+| AI 能力 | Gemini API
 
 ---
 
